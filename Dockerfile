@@ -13,14 +13,13 @@ RUN pg_ctl start -D /var/lib/postgresql/data &&\
     createdb -O noodle noodle
 
 USER root
-RUN npm install -g "https://github-registry-files.githubusercontent.com/453111396/a08c9380-85cd-11ec-8faa-e5a265b8af7f?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20220204%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220204T155053Z&X-Amz-Expires=300&X-Amz-Signature=ce9cfcb0eebdd6564349a556d9e5169afaa8e649c7c335a97ddbcb8596b5c889&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=453111396&response-content-disposition=filename%3Dnoodle_backend-0.0.1-npm.tgz&response-content-type=application%2Foctet-stream"
 ARG github_token
 ENV GITHUB_TOKEN=$github_token
 
 RUN echo registry=https://registry.npmjs.org/ >> ~/.npmrc
-RUN echo @github_user:registry=https://npm.pkg.github.com/ >> ~/.npmrc
+RUN echo @software-engineering-dhbw:registry=https://npm.pkg.github.com/ >> ~/.npmrc
 RUN echo //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN >> ~/.npmrc
 RUN npm install -g @software-engineering-dhbw/noodle_backend@0.0.1
 
-#EXPOSE 3000
+EXPOSE 3000
 CMD ["/bin/sh", "-c", "/etc/init.d/postgresql start && noodleBackend"]
