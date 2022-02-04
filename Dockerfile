@@ -13,10 +13,10 @@ RUN pg_ctl start -D /var/lib/postgresql/data &&\
     createdb -O noodle noodle
 
 USER root
+ARG GITHUB_TOKEN
 
-RUN echo registry=https://registry.npmjs.org/ >> ~/.npmrc
+RUN echo //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN} >> ~/.npmrc
 RUN echo @software-engineering-dhbw:registry=https://npm.pkg.github.com/ >> ~/.npmrc
-RUN echo //npm.pkg.github.com/:_authToken=github_token >> ~/.npmrc
 RUN npm install -g @software-engineering-dhbw/noodle_backend@0.0.1
 
 EXPOSE 3000
