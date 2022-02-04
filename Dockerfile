@@ -20,4 +20,4 @@ RUN echo @software-engineering-dhbw:registry=https://npm.pkg.github.com/ >> ~/.n
 RUN npm install -g @software-engineering-dhbw/noodle_backend@0.0.1
 
 EXPOSE 3000
-CMD ["/bin/sh", "-c", "/etc/init.d/postgresql start && noodleBackend"]
+CMD ["/bin/sh", "-c", "pg_ctl start -D /var/lib/postgresql/data && noodleBackend"]
