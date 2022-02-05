@@ -19,7 +19,11 @@ RUN echo //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN} >> ~/.npmrc
 RUN echo @software-engineering-dhbw:registry=https://npm.pkg.github.com/ >> ~/.npmrc
 RUN npm install -g @software-engineering-dhbw/noodle_backend@0.0.1
 
-RUN noodleBackend init
+EXPOSE 3000
+
+USER postgres
+RUN pg_ctl start -D /var/lib/postgresql/data &&\
+    noodleBackend init
 
 EXPOSE 3000
 
