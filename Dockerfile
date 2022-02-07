@@ -10,12 +10,13 @@ COPY noodle.conf /etc/nginx/sites-enabled/noodle.conf
 COPY startUp.sh /usr/local/bin/startUp
 
 # Build and Copy the Frontend
-RUN git clone -b prototype https://github.com/Software-Engineering-DHBW/noodle_frontend.git
+RUN git clone -b MS2 https://github.com/Software-Engineering-DHBW/noodle_frontend.git
 WORKDIR /noodle_frontend
 RUN npm ci
 RUN npm run build
 RUN cp dist/* /var/www/public -r
 WORKDIR /
+RUN rm /noodle_frontend -r
 
 # Set up the postgres-server
 RUN mkdir /run/postgresql
@@ -29,7 +30,7 @@ RUN pg_ctl start -D /var/lib/postgresql/data &&\
 
 # Setup the noodle backend
 USER root
-RUN git clone https://github.com/Software-Engineering-DHBW/noodle_backend.git
+RUN git clone -b MS2 https://github.com/Software-Engineering-DHBW/noodle_backend.git
 WORKDIR /noodle_backend
 RUN npm ci
 
