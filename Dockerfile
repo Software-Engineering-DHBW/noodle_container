@@ -5,10 +5,17 @@ RUN apk add --no-cache nginx nodejs npm postgresql git
 
 # Set up the nginx server
 RUN mkdir /var/www/public
-RUN echo "Hello World" > /var/www/public/index.html
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY noodle.conf /etc/nginx/sites-enabled/noodle.conf
 COPY startUp.sh /usr/local/bin/startUp
+
+# Build and Copy the Frontend
+RUN git clone -b prototype https://github.com/Software-Engineering-DHBW/noodle_frontend.git
+WORKDIR /noodle_frontend
+RUN npm ci
+RUN npm run build
+RUN cp dist/* /var/www/public -r
+WORKDIR /
 
 # Set up the postgres-server
 RUN mkdir /run/postgresql
