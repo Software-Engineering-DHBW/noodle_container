@@ -3,6 +3,14 @@ MAINTAINER Past-AG
 
 RUN apk add --no-cache nginx nodejs npm postgresql git
 
+# Set up the nginx server
+RUN mkdir /var/www/public
+RUN echo "Hello World" > /var/www/public/index.html
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY noodle.conf /etc/nginx/sites-enabled/noodle.conf
+COPY startUp.sh /usr/local/bin/startUp
+
+# Set up the postgres-server
 RUN mkdir /run/postgresql
 RUN chown -R postgres:postgres /run/postgresql
 USER postgres
@@ -12,6 +20,7 @@ RUN pg_ctl start -D /var/lib/postgresql/data &&\
     psql -c "CREATE USER noodle WITH PASSWORD 'noodle';" &&\
     createdb -O noodle noodle
 
+# Setup the noodle backend
 USER root
 RUN git clone https://github.com/Software-Engineering-DHBW/noodle_backend.git
 WORKDIR /noodle_backend
@@ -29,5 +38,5 @@ RUN pg_ctl start -D /var/lib/postgresql/data &&\
 
 EXPOSE 3000
 
-USER postgres
-CMD ["/bin/sh", "-c", "pg_ctl start -D /var/lib/postgresql/data && NODE_ENV='production' npm start"]
+USER root
+CMD ["/bin/sh", "-c", "/usr/local/bin/startUp"]
