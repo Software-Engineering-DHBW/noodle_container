@@ -30,21 +30,17 @@ RUN pg_ctl start -D /var/lib/postgresql/data &&\
 
 # Setup the noodle backend
 USER root
-RUN git clone https://github.com/Software-Engineering-DHBW/noodle_backend.git
-WORKDIR /noodle_backend
-RUN npm ci
+ARG GITHUB_TOKEN
 
-#ARG GITHUB_TOKEN
-
-#RUN echo //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN} >> ~/.npmrc
-#RUN echo @software-engineering-dhbw:registry=https://npm.pkg.github.com/ >> ~/.npmrc
-#RUN npm install -g @software-engineering-dhbw/noodle_backend@0.0.1
+RUN echo //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN} >> ~/.npmrc
+RUN echo @software-engineering-dhbw:registry=https://npm.pkg.github.com/ >> ~/.npmrc
+RUN npm install -g @software-engineering-dhbw/noodle_backend@0.0.1
 
 USER postgres
 RUN pg_ctl start -D /var/lib/postgresql/data &&\
-    npm start init
+    noodleBackend init
 
-EXPOSE 3000
+EXPOSE 80
 
 USER root
 CMD ["/bin/sh", "-c", "/usr/local/bin/startUp"]
