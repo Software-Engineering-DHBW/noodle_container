@@ -12,6 +12,7 @@ COPY startUp.sh /usr/local/bin/startUp
 # Build and Copy the Frontend
 RUN git clone https://github.com/Software-Engineering-DHBW/noodle_frontend.git
 WORKDIR /noodle_frontend
+RUN git checkout MS5
 RUN npm ci
 RUN npm run build
 RUN cp dist/* /var/www/public -r
@@ -34,7 +35,7 @@ ARG GITHUB_TOKEN
 
 RUN echo //npm.pkg.github.com/:_authToken=${GITHUB_TOKEN} >> ~/.npmrc
 RUN echo @software-engineering-dhbw:registry=https://npm.pkg.github.com/ >> ~/.npmrc
-RUN npm install -g @software-engineering-dhbw/noodle_backend@0.0.1
+RUN npm install -g @software-engineering-dhbw/noodle_backend@0.0.2
 
 USER postgres
 RUN pg_ctl start -D /var/lib/postgresql/data &&\
